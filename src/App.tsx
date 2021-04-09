@@ -1,33 +1,33 @@
-import { useQuery } from '@apollo/client';
 import React from 'react';
-import './App.css';
-import { blocks } from './graphql/characters';
-import { CHARACTER_QUERY } from './graphql/schemas';
+
+import AppWrapper from './components/App'
+import Header from './components/Header'
+import Section from './components/Section';
+import Footer from './components/Footer';
+import CharacterCard from './components/CharacterCard';
+import { useCharacterQuery } from './graphql/types';
 
 const App = () => {
-  const { data } = useQuery(CHARACTER_QUERY, {
-    variables: {
-      id: "6"
-    }
-  })
+
+  // 3) REPLACE THIS HOOK WITH A `useCharactersQuery` HOOK
+
+  const { data } = useCharacterQuery({variables: {
+    id: "1"
+  }})
+
+  if (!data || !data.character) return null
 
   return (
-    <div className="app">
-      <header className="header">
-        <span>Some Kind of Wiki</span>
-      </header>
-      <section className="section">
-        {blocks.map(b => <div className="card" key={b.id}>
-          <img src={b.image} alt="icon" className="avatar" />
-          {b.name}
-        </div>)}
-        <div className="card">
-          <img src={data?.character.image} alt="icon" className="avatar" />
-          {data?.character.name}
-        </div>
-      </section>
-      <footer className="footer" />
-    </div>
+    <AppWrapper>
+      <Header>
+        <span>Rick and Morty Character Card Info</span>
+      </Header>
+      <Section>
+        {/* 4) ITERATE THROUGH THE NEW CHARACTERS DATA AND DISPLAY CARDS FOR EACH CHARACTER */}
+        <CharacterCard character={data.character} />
+      </Section>
+      <Footer />
+    </AppWrapper>
   );
 }
 
